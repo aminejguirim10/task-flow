@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { experimental_useObject as useObject } from "@ai-sdk/react"
 import { taskSchema } from "@/lib/schema"
@@ -14,7 +12,11 @@ import { ProjectOverview } from "@/components/project-overview"
 import { ExportButtons } from "@/components/export-buttons"
 import { Sparkles, Plus, Loader2, Brain } from "lucide-react"
 
+import { useRouter } from "next/navigation"
+import { Project } from "@prisma/client"
+
 export default function ChatTasks() {
+  const router = useRouter()
   const [prompt, setPrompt] = useState("")
   const [completedTasks, setCompletedTasks] = useState<Set<string>>(new Set())
 
@@ -44,6 +46,7 @@ export default function ChatTasks() {
   }
 
   const project = object?.project
+  const [saving, setSaving] = useState(false)
 
   // Type guard to ensure the task is complete according to our Task type
   const isCompleteTask = (t: any): t is Task =>
@@ -177,6 +180,8 @@ export default function ChatTasks() {
                 <ExportButtons
                   tasks={tasks}
                   projectTitle={project?.title ?? "Project"}
+                  project={project as Project}
+                  showSaveDB={true}
                 />
               </CardContent>
             </Card>

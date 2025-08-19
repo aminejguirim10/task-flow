@@ -1,18 +1,33 @@
 "use client"
 import { Button } from "@/components/ui/button"
-import { Download, Calendar, FileText, Check } from "lucide-react"
+import { Download, Calendar, Check, Loader2, Save } from "lucide-react"
 import type { Task } from "@/lib/schema"
 import { useState, useEffect } from "react"
+import { Project } from "@prisma/client"
+import { createProject } from "@/actions/project.actions"
+import { useRouter } from "next/navigation"
 
 interface ExportButtonsProps {
   tasks: Task[]
   projectTitle: string
+  project?: Project
+  showSaveDB: boolean
 }
 
-export function ExportButtons({ tasks, projectTitle }: ExportButtonsProps) {
+export function ExportButtons({
+  tasks,
+  projectTitle,
+  project,
+  showSaveDB,
+}: ExportButtonsProps) {
   const [showCalendarTasks, setShowCalendarTasks] = useState(false)
   const [completedTasks, setCompletedTasks] = useState<Set<string>>(new Set())
   const [pendingTasks, setPendingTasks] = useState<Set<string>>(new Set())
+  const [saveResult, setSaveResult] = useState<
+    { ok: true; id: string } | { ok: false; error: string } | null
+  >(null)
+  const [saving, setSaving] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     const savedExportedTasks = localStorage.getItem("exported-calendar-tasks")
@@ -196,11 +211,45 @@ export function ExportButtons({ tasks, projectTitle }: ExportButtonsProps) {
     (task) => !completedTasks.has(getTaskId(task, projectTitle))
   )
   const exportedCount = tasks.length - availableTasks.length
+  const handleSave = async () => {
+    if (!project) return
+    try {
+      setSaving(true)
+      setSaveResult(null)
+      const fd = new FormData()
+      fd.append("payload", JSON.stringify({ project }))
+      const res = await createProject(fd)
+      setSaveResult(res as any)
+      if (res.ok && res.id) {
+        router.push(`/projects/${res.id}`)
+      }
+    } catch (e: any) {
+      setSaveResult({ ok: false, error: e?.message || "Unknown error" })
+    } finally {
+      setSaving(false)
+    }
+  }
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-3">
+        {showSaveDB && (
+          <Button onClick={handleSave} disabled={saving}>
+            {saving ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="mr-2 h-4 w-4" />
+                Save to DB
+              </>
+            )}
+          </Button>
+        )}
         <Button
+          disabled={saving}
           onClick={exportToCSV}
           variant="outline"
           className="flex items-center gap-2 border-green-200 bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 hover:from-green-100 hover:to-emerald-100 hover:text-green-800"
@@ -210,6 +259,7 @@ export function ExportButtons({ tasks, projectTitle }: ExportButtonsProps) {
         </Button>
 
         <Button
+          disabled={saving}
           onClick={exportToGoogleCalendar}
           variant="outline"
           className="flex items-center gap-2 border-blue-200 bg-gradient-to-r from-blue-50 to-sky-50 text-blue-700 hover:from-blue-100 hover:to-sky-100 hover:text-blue-800"
@@ -223,6 +273,17 @@ export function ExportButtons({ tasks, projectTitle }: ExportButtonsProps) {
           )}
         </Button>
       </div>
+      {showSaveDB && saveResult && (
+        <p
+          className={`text-sm ${
+            saveResult.ok ? "text-green-600" : "text-red-600"
+          }`}
+        >
+          {saveResult.ok
+            ? `Saved (id: ${saveResult.id})`
+            : `Failed: ${saveResult.error}`}
+        </p>
+      )}
       {showCalendarTasks && (
         <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
           <div className="mb-3 flex items-center justify-between">
@@ -230,6 +291,7 @@ export function ExportButtons({ tasks, projectTitle }: ExportButtonsProps) {
               Export to Google Calendar
             </h3>
             <Button
+              disabled={saving}
               variant="ghost"
               size="sm"
               onClick={() => setShowCalendarTasks(false)}
@@ -277,7 +339,7 @@ export function ExportButtons({ tasks, projectTitle }: ExportButtonsProps) {
                           size="sm"
                           onClick={() => openCalendarEvent(task, originalIndex)}
                           className="bg-blue-600 hover:bg-blue-700"
-                          disabled={isPending}
+                          disabled={isPending || saving}
                         >
                           {isPending ? "Opened" : "Add to Calendar"}
                         </Button>
@@ -285,6 +347,7 @@ export function ExportButtons({ tasks, projectTitle }: ExportButtonsProps) {
                           <Button
                             size="sm"
                             variant="outline"
+                            disabled={saving}
                             onClick={() => markTaskAsDone(task)}
                             className="border-green-200 text-green-700 hover:bg-green-50"
                           >
