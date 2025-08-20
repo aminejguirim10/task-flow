@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 export default function ChatLoadingPage() {
   return (
     <div className="bg-background min-h-screen">
-      <main className="container mx-auto px-4 py-8">
+      <main className="mx-auto max-w-7xl px-4 py-8">
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="font-heading flex items-center gap-2">

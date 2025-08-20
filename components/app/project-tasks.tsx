@@ -2,9 +2,9 @@
 
 import { useState, useTransition, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ProjectOverview } from "@/components/project-overview"
-import { ExportButtons } from "@/components/export-buttons"
-import { TaskCard } from "@/components/task-card"
+import { ProjectOverview } from "@/components/app/project-overview"
+import { ExportButtons } from "@/components/shared/export-buttons"
+import { TaskCard } from "@/components/app/task-card"
 import { updateTaskStatus } from "@/actions/project.actions"
 import { PRIORITY } from "@prisma/client"
 

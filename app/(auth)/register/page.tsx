@@ -1,10 +1,10 @@
 import Link from "next/link"
-
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { UserAuthForm } from "@/components/form/user-auth-form"
 import { ServerSession } from "@/lib/session"
 import { redirect } from "next/navigation"
+import Image from "next/image"
 
 export const metadata = {
   title: "Create an account",
@@ -19,7 +19,7 @@ export default async function RegisterPage() {
   }
 
   return (
-    <div className="container grid h-screen w-screen flex-col items-center justify-center max-sm:px-12 lg:max-w-none lg:grid-cols-2 lg:px-0">
+    <div className="grid h-screen w-screen max-w-7xl flex-col items-center justify-center max-sm:px-12 lg:max-w-none lg:grid-cols-2 lg:px-0">
       <Link
         href="/login"
         className={cn(
@@ -33,8 +33,13 @@ export default async function RegisterPage() {
       <div className="lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
-            {/*TODO: Icon here
-            <span className="mx-auto h-6 w-6" />*/}
+            <Image
+              src={"/assets/logo.png"}
+              alt="Logo"
+              width={1400}
+              height={1400}
+              className="mx-auto h-8 w-8 rounded-md"
+            />
             <h1 className="text-2xl font-semibold tracking-tight">
               Create an account
             </h1>

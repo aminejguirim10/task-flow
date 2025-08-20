@@ -1,4 +1,4 @@
-import Header from "@/components/header"
+import Header from "@/components/layout/header"
 import { ServerSession } from "@/lib/session"
 
 export default async function MarketingLayout({

@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 export default function ProjectLoadingPage() {
   return (
     <div className="bg-background min-h-screen">
-      <main className="container mx-auto px-4 py-8">
+      <main className="mx-auto max-w-7xl px-4 py-8">
         <Card className="mb-6">
           <CardHeader>
             <div className="flex items-start justify-between">

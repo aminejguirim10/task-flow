@@ -182,7 +182,7 @@ export default function ProjectsList({
                     <Button
                       variant="default"
                       onClick={() => router.push(`/projects/${p.id}`)}
-                      className="group/button"
+                      className="group/button hover:cursor-pointer"
                       disabled={isPending}
                     >
                       Open

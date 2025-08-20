@@ -88,7 +88,7 @@ export default function Header({
                   disabled={signingOut}
                   className={cn(
                     buttonVariants({ variant: "ghost", size: "sm" }),
-                    "px-3"
+                    "px-3 hover:cursor-pointer"
                   )}
                   aria-label="Sign out"
                 >

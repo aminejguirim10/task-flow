@@ -1,12 +1,12 @@
 import { Metadata } from "next"
 import Link from "next/link"
-
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { UserAuthForm } from "@/components/form/user-auth-form"
 import { ChevronLeft } from "lucide-react"
 import { ServerSession } from "@/lib/session"
 import { redirect } from "next/navigation"
+import Image from "next/image"
 
 export const metadata: Metadata = {
   title: "Login",
@@ -36,8 +36,13 @@ export default async function LoginPage() {
       </Link>
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <div className="flex flex-col space-y-2 text-center">
-          {/*TODO: Icon here
-            <span className="mx-auto h-6 w-6" />*/}
+          <Image
+            src={"/assets/logo.png"}
+            alt="Logo"
+            width={1400}
+            height={1400}
+            className="mx-auto h-8 w-8 rounded-md"
+          />
           <h1 className="text-2xl font-semibold tracking-tight">
             Welcome back
           </h1>

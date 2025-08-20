@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export default function RegisterLoadingPage() {
   return (
-    <div className="container grid h-screen w-screen flex-col items-center justify-center max-sm:px-12 lg:max-w-none lg:grid-cols-2 lg:px-0">
+    <div className="grid h-screen w-screen max-w-7xl flex-col items-center justify-center max-sm:px-12 lg:max-w-none lg:grid-cols-2 lg:px-0">
       <div className="absolute top-4 right-4 md:top-8 md:right-8">
         <Skeleton className="h-9 w-20 rounded-md" />
       </div>

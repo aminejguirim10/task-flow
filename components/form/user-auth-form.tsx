@@ -82,7 +82,7 @@ export function UserAuthForm({
           </div>
           <button
             type="submit"
-            className={cn(buttonVariants())}
+            className={cn(buttonVariants(), "hover:cursor-pointer")}
             disabled={isLoading || isGooogleLoading || isGitHubLoading}
           >
             {isLoading && (
@@ -105,10 +105,13 @@ export function UserAuthForm({
       <div className="flex flex-col gap-4">
         <button
           type="button"
-          className={cn(buttonVariants({ variant: "outline" }))}
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "hover:cursor-pointer"
+          )}
           onClick={async () => {
             setIsGoogleLoading(true)
-            const { error } = await authClient.signIn.social({
+            await authClient.signIn.social({
               provider: "google",
               callbackURL: "/chat",
             })
@@ -124,7 +127,10 @@ export function UserAuthForm({
         </button>
         <button
           type="button"
-          className={cn(buttonVariants({ variant: "outline" }))}
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "hover:cursor-pointer"
+          )}
           onClick={async () => {
             setIsGitHubLoading(true)
             await authClient.signIn.social({

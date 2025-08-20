@@ -1,4 +1,4 @@
-import ChatTasks from "@/components/chat-tasks"
+import ChatTasks from "@/components/app/chat-tasks"
 import { ServerSession } from "@/lib/session"
 import { redirect } from "next/navigation"
 

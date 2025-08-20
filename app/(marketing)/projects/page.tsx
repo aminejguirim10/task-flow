@@ -1,4 +1,4 @@
-import ProjectsList from "@/components/projects-list"
+import ProjectsList from "@/components/app/projects-list"
 import { prisma } from "@/lib/db"
 import { ServerSession } from "@/lib/session"
 import { redirect } from "next/navigation"
@@ -28,7 +28,7 @@ export default async function ProjectsPage() {
 
   return (
     <div className="bg-background min-h-screen">
-      <main className="container mx-auto px-4 py-8">
+      <main className="mx-auto max-w-7xl px-4 py-8">
         <ProjectsList projects={normalized} userId={session.user.id} />
       </main>
     </div>

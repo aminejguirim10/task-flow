@@ -7,9 +7,9 @@ import type { Task } from "@/lib/schema"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { TaskCard } from "@/components/task-card"
-import { ProjectOverview } from "@/components/project-overview"
-import { ExportButtons } from "@/components/export-buttons"
+import { TaskCard } from "@/components/app/task-card"
+import { ProjectOverview } from "@/components/app/project-overview"
+import { ExportButtons } from "@/components/shared/export-buttons"
 import { Sparkles, Plus, Loader2, Brain } from "lucide-react"
 
 import { Project } from "@prisma/client"
@@ -62,7 +62,7 @@ export default function ChatTasks({ userId }: { userId: string }) {
 
   return (
     <div className="bg-background min-h-screen">
-      <main className="container mx-auto px-4 py-8">
+      <main className="mx-auto max-w-7xl px-4 py-8">
         {/* AI Task Generation Form */}
         <Card className="mb-8">
           <CardHeader>

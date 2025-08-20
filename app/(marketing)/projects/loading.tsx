@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 export default function ProjectsLoadingPage() {
   return (
     <div className="bg-background min-h-screen">
-      <main className="container mx-auto px-4 py-8">
+      <main className="mx-auto max-w-7xl px-4 py-8">
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <Skeleton className="h-7 w-40" />
           <div className="relative w-full sm:w-80">
