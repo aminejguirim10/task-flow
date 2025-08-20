@@ -5,13 +5,20 @@ import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { UserAuthForm } from "@/components/form/user-auth-form"
 import { ChevronLeft } from "lucide-react"
+import { ServerSession } from "@/lib/session"
+import { redirect } from "next/navigation"
 
 export const metadata: Metadata = {
   title: "Login",
   description: "Login to your account",
 }
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const session = await ServerSession()
+
+  if (session) {
+    redirect("/chat")
+  }
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center max-sm:px-12">
       <Link
@@ -37,7 +44,7 @@ export default function LoginPage() {
             Enter your email to sign in to your account
           </p>
         </div>
-        <UserAuthForm />
+        <UserAuthForm typeForm="SIGNIN" />
         <p className="text-muted-foreground px-8 text-center text-sm">
           <Link
             href="/register"

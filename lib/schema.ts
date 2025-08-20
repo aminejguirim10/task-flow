@@ -1,7 +1,8 @@
 import { z } from "zod"
 
-export const taskSchema = z.object({
+export const projectSchema = z.object({
   project: z.object({
+    userId: z.string(),
     title: z.string().describe("The main project or goal title"),
     description: z.string().describe("Brief description of the project"),
     tasks: z.array(
@@ -37,8 +38,8 @@ export const taskSchema = z.object({
   }),
 })
 
-export type TaskProject = z.infer<typeof taskSchema>
-export type Task = z.infer<typeof taskSchema>["project"]["tasks"][0]
+export type TaskProject = z.infer<typeof projectSchema>
+export type Task = z.infer<typeof projectSchema>["project"]["tasks"][0]
 
 export const authSchema = z.object({
   email: z

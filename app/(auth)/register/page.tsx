@@ -3,15 +3,22 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { UserAuthForm } from "@/components/form/user-auth-form"
+import { ServerSession } from "@/lib/session"
+import { redirect } from "next/navigation"
 
 export const metadata = {
   title: "Create an account",
   description: "Create an account to get started.",
 }
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  const session = await ServerSession()
+
+  if (session) {
+    redirect("/chat")
+  }
   return (
-    <div className="b container grid h-screen w-screen flex-col items-center justify-center max-sm:px-12 lg:max-w-none lg:grid-cols-2 lg:px-0">
+    <div className="container grid h-screen w-screen flex-col items-center justify-center max-sm:px-12 lg:max-w-none lg:grid-cols-2 lg:px-0">
       <Link
         href="/login"
         className={cn(
@@ -34,7 +41,7 @@ export default function RegisterPage() {
               Enter your email below to create your account
             </p>
           </div>
-          <UserAuthForm />
+          <UserAuthForm typeForm="SIGNUP" />
           <p className="text-muted-foreground px-8 text-center text-sm">
             By clicking continue, you agree to our{" "}
             <Link

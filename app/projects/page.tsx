@@ -1,6 +1,11 @@
-import React from "react"
+import { ServerSession } from "@/lib/session"
+import { redirect } from "next/navigation"
 
-const ProjectsPage = () => {
+const ProjectsPage = async () => {
+  const session = await ServerSession()
+  if (!session) {
+    redirect("/login")
+  }
   return <div>ProjectsPage</div>
 }
 

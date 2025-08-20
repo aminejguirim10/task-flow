@@ -12,6 +12,7 @@ interface ExportButtonsProps {
   projectTitle: string
   project?: Project
   showSaveDB: boolean
+  userId?: string
 }
 
 export function ExportButtons({
@@ -19,6 +20,7 @@ export function ExportButtons({
   projectTitle,
   project,
   showSaveDB,
+  userId,
 }: ExportButtonsProps) {
   const [showCalendarTasks, setShowCalendarTasks] = useState(false)
   const [completedTasks, setCompletedTasks] = useState<Set<string>>(new Set())
@@ -217,6 +219,9 @@ export function ExportButtons({
       setSaving(true)
       setSaveResult(null)
       const fd = new FormData()
+      if (userId) {
+        project.userId = userId
+      }
       fd.append("payload", JSON.stringify({ project }))
       const res = await createProject(fd)
       setSaveResult(res as any)

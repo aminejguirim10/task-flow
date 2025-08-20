@@ -1,12 +1,17 @@
 import ProjectTasks from "@/components/project-tasks"
 import { prisma } from "@/lib/db"
-import { notFound } from "next/navigation"
+import { ServerSession } from "@/lib/session"
+import { notFound, redirect } from "next/navigation"
 
 export default async function ProjectPage({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
+  const session = await ServerSession()
+  if (!session) {
+    redirect("/login")
+  }
   const { id } = await params
 
   const project = await prisma.project.findUnique({
@@ -15,6 +20,10 @@ export default async function ProjectPage({
   })
 
   if (!project) return notFound()
+
+  if (project.userId !== session.user.id) {
+    redirect("/chat")
+  }
 
   return (
     <div className="bg-background min-h-screen">

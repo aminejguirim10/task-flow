@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { experimental_useObject as useObject } from "@ai-sdk/react"
-import { taskSchema } from "@/lib/schema"
+import { projectSchema } from "@/lib/schema"
 import type { Task } from "@/lib/schema"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,17 +12,15 @@ import { ProjectOverview } from "@/components/project-overview"
 import { ExportButtons } from "@/components/export-buttons"
 import { Sparkles, Plus, Loader2, Brain } from "lucide-react"
 
-import { useRouter } from "next/navigation"
 import { Project } from "@prisma/client"
 
-export default function ChatTasks() {
-  const router = useRouter()
+export default function ChatTasks({ userId }: { userId: string }) {
   const [prompt, setPrompt] = useState("")
   const [completedTasks, setCompletedTasks] = useState<Set<string>>(new Set())
 
   const { submit, object, isLoading, error, stop } = useObject({
     api: "/api/chat",
-    schema: taskSchema,
+    schema: projectSchema,
   })
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -46,8 +44,6 @@ export default function ChatTasks() {
   }
 
   const project = object?.project
-  const [saving, setSaving] = useState(false)
-
   // Type guard to ensure the task is complete according to our Task type
   const isCompleteTask = (t: any): t is Task =>
     t &&
@@ -182,6 +178,7 @@ export default function ChatTasks() {
                   projectTitle={project?.title ?? "Project"}
                   project={project as Project}
                   showSaveDB={true}
+                  userId={userId}
                 />
               </CardContent>
             </Card>

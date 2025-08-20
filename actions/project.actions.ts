@@ -1,7 +1,7 @@
 "use server"
 
 import { prisma } from "@/lib/db"
-import { taskSchema } from "@/lib/schema"
+import { projectSchema } from "@/lib/schema"
 import type { PRIORITY } from "@prisma/client"
 
 export async function createProject(formData: FormData) {
@@ -12,7 +12,8 @@ export async function createProject(formData: FormData) {
     }
 
     const parsedJson = JSON.parse(raw)
-    const parsed = taskSchema.safeParse(parsedJson)
+    const parsed = projectSchema.safeParse(parsedJson)
+
     if (!parsed.success) {
       return { ok: false, error: "Payload invalide" }
     }
@@ -21,6 +22,7 @@ export async function createProject(formData: FormData) {
 
     const created = await prisma.project.create({
       data: {
+        userId: project.userId,
         title: project.title,
         description: project.description,
         timeline: project.timeline,

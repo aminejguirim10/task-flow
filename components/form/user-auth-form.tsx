@@ -14,11 +14,17 @@ import { LoaderCircle } from "lucide-react"
 import { GithubIcon, GoogleIcon } from "@/components/shared/icons"
 import { authClient } from "@/lib/auth-client"
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
+  typeForm: "SIGNIN" | "SIGNUP"
+}
 
 type FormData = z.infer<typeof authSchema>
 
-export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+export function UserAuthForm({
+  typeForm,
+  className,
+  ...props
+}: UserAuthFormProps) {
   const {
     register,
     handleSubmit,
@@ -55,7 +61,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   return (
     <div className={cn("grid gap-6", className)} {...props}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid gap-2">
+        <div className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -82,7 +88,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             {isLoading && (
               <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Sign In with Email
+            {typeForm === "SIGNIN" ? "Sign In" : "Sign up"} with Email
           </button>
         </div>
       </form>
@@ -106,7 +112,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               provider: "google",
               callbackURL: "/chat",
             })
-            console.log(error)
           }}
           disabled={isLoading || isGooogleLoading || isGitHubLoading}
         >
