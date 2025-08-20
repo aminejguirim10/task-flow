@@ -62,27 +62,6 @@ export default function ChatTasks({ userId }: { userId: string }) {
 
   return (
     <div className="bg-background min-h-screen">
-      {/* Header */}
-      <header className="bg-card/50 sticky top-0 z-10 border-b backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-primary rounded-lg p-2">
-                <Brain className="text-primary-foreground h-6 w-6" />
-              </div>
-              <div>
-                <h1 className="font-heading text-2xl font-bold">
-                  AI Task Manager Pro
-                </h1>
-                <p className="text-muted-foreground text-sm">
-                  Generate intelligent task breakdowns with AI
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <main className="container mx-auto px-4 py-8">
         {/* AI Task Generation Form */}
         <Card className="mb-8">

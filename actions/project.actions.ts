@@ -73,3 +73,30 @@ export async function updateTaskStatus(formData: FormData) {
     return { ok: false, error: (err as Error).message }
   }
 }
+
+export async function deleteProject(projectId: string, userId: string) {
+  try {
+    if (!projectId || !userId) {
+      return { ok: false, error: "Missing projectId or userId" }
+    }
+
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+      select: { id: true, userId: true },
+    })
+
+    if (!project) {
+      return { ok: false, error: "Project not found" }
+    }
+
+    if (project.userId !== userId) {
+      return { ok: false, error: "Not authorized" }
+    }
+
+    await prisma.project.delete({ where: { id: projectId } })
+    return { ok: true }
+  } catch (err) {
+    console.error("deleteProject error", err)
+    return { ok: false, error: (err as Error).message }
+  }
+}
