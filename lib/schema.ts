@@ -39,3 +39,10 @@ export const taskSchema = z.object({
 
 export type TaskProject = z.infer<typeof taskSchema>
 export type Task = z.infer<typeof taskSchema>["project"]["tasks"][0]
+
+export const authSchema = z.object({
+  email: z
+    .string()
+    .email({ message: "Invalid email address" })
+    .describe("User email"),
+})
