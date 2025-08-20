@@ -7,6 +7,7 @@ const ChatPage = async () => {
   if (!session) {
     redirect("/login")
   }
+
   return <ChatTasks userId={session.user.id} />
 }
 

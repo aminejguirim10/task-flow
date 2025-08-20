@@ -19,6 +19,7 @@ export default async function LoginPage() {
   if (session) {
     redirect("/chat")
   }
+
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center max-sm:px-12">
       <Link

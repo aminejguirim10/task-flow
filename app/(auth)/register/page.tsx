@@ -17,6 +17,7 @@ export default async function RegisterPage() {
   if (session) {
     redirect("/chat")
   }
+
   return (
     <div className="container grid h-screen w-screen flex-col items-center justify-center max-sm:px-12 lg:max-w-none lg:grid-cols-2 lg:px-0">
       <Link
