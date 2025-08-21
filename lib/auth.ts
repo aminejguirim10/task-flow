@@ -20,6 +20,7 @@ export const auth = betterAuth({
   },
   plugins: [
     magicLink({
+      expiresIn: 15 * 60,
       sendMagicLink: async ({ email, token, url }) => {
         await sendMagicLink(email, token, url)
       },

@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo, useState, useTransition } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Project } from "@prisma/client"
 import { deleteProject } from "@/actions/project.actions"
@@ -16,7 +17,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Trash2, ArrowRight, Search } from "lucide-react"
+import { Trash2, ArrowRight, Search, SearchX } from "lucide-react"
 import { toast } from "sonner"
 import {
   AlertDialog,
@@ -80,8 +81,44 @@ export default function ProjectsList({
       </div>
 
       {filtered.length === 0 ? (
-        <div className="bg-background text-muted-foreground rounded-xl border p-10 text-center">
-          No projects found.
+        <div className="mx-auto w-full max-w-2xl pt-10 md:pt-20">
+          <Card className="border shadow-sm">
+            <CardContent className="p-8 text-center sm:p-10">
+              <div className="from-accent/20 to-primary/20 ring-border mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-tr ring-1">
+                <SearchX className="text-accent h-8 w-8" />
+              </div>
+              <h2 className="from-primary to-accent bg-gradient-to-r bg-clip-text text-xl font-extrabold tracking-tight text-transparent sm:text-2xl">
+                No projects found
+              </h2>
+              <p className="text-muted-foreground mx-auto mt-2 max-w-md text-sm sm:text-base">
+                {query
+                  ? "No results match your search. Try clearing the filter or adjust your keywords."
+                  : "You don’t have any projects yet. Start by exploring or chatting with the assistant."}
+              </p>
+
+              <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                {query ? (
+                  <Button
+                    variant="default"
+                    className="px-6"
+                    onClick={() => setQuery("")}
+                  >
+                    Clear search
+                  </Button>
+                ) : (
+                  <Button asChild className="group/button px-6">
+                    <Link href="/">
+                      Back to home
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-200 group-hover/button:translate-x-0.5" />
+                    </Link>
+                  </Button>
+                )}
+                <Button asChild variant="outline" className="px-6">
+                  <Link href="/chat">Open chat</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

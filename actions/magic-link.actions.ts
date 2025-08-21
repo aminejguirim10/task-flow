@@ -1,5 +1,6 @@
 "use server"
 import nodemailer from "nodemailer"
+import { MagicLinkEmailTemplate } from "@/lib/email"
 
 export async function sendMagicLink(email: string, token: string, url: string) {
   try {
@@ -13,11 +14,14 @@ export async function sendMagicLink(email: string, token: string, url: string) {
       },
     })
 
+    const appName = "TaskFlow"
+    const expiresInMinutes = 15
+
     const mailOptions = {
       from: process.env.NODE_MAILER_AUTHOR_MAIL!,
       to: email,
-      subject: `Magic Link Email task-flow`,
-      text: `Click the following link to log in: ${url}`,
+      subject: `${appName} · Your magic link`,
+      html: MagicLinkEmailTemplate({ appName, url, expiresInMinutes }),
     }
     await transporter.sendMail(mailOptions)
 
