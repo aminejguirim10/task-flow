@@ -13,6 +13,7 @@ interface ExportButtonsProps {
   project?: Project
   showSaveDB: boolean
   userId?: string
+  completedTaskIds?: string[] | Set<string>
 }
 
 export function ExportButtons({
@@ -21,8 +22,10 @@ export function ExportButtons({
   project,
   showSaveDB,
   userId,
+  completedTaskIds,
 }: ExportButtonsProps) {
   const [showCalendarTasks, setShowCalendarTasks] = useState(false)
+  // Tracks tasks that the user has already added to calendar and marked as done
   const [completedTasks, setCompletedTasks] = useState<Set<string>>(new Set())
   const [pendingTasks, setPendingTasks] = useState<Set<string>>(new Set())
   const [saveResult, setSaveResult] = useState<
@@ -45,6 +48,25 @@ export function ExportButtons({
     )
   }, [completedTasks])
 
+  // Normalize externally provided completed ids
+  const externalCompletedIds = new Set(
+    Array.isArray(completedTaskIds)
+      ? completedTaskIds
+      : completedTaskIds instanceof Set
+        ? Array.from(completedTaskIds)
+        : []
+  )
+
+  const isTaskCompleted = (task: Task) => {
+    // Prefer explicit completed flag on task if present
+    const anyTask = task as any
+    if (typeof anyTask.completed === "boolean") return anyTask.completed
+    // Else rely on external set of completed ids (from UI state)
+    if (externalCompletedIds.size > 0) return externalCompletedIds.has(task.id)
+    // Default
+    return false
+  }
+
   const getTaskId = (task: Task, projectTitle: string) => {
     return `${projectTitle}-${task.title}-${task.description.substring(0, 50)}`.replace(
       /[^a-zA-Z0-9]/g,
@@ -62,22 +84,37 @@ export function ExportButtons({
       "Dependencies",
       "Status",
     ]
-    const csvContent = [
-      headers.join(","),
-      ...tasks.map((task) =>
-        [
-          `"${task.title}"`,
-          `"${task.description}"`,
-          task.priority,
-          task.category,
-          task.estimatedTime,
-          `"${task.dependencies?.join("; ") || ""}"`,
-          "Pending",
-        ].join(",")
-      ),
-    ].join("\n")
+    // Escape helper for CSV
+    const esc = (v: unknown) => {
+      const s = String(v ?? "")
+      // Double any quotes and wrap in quotes
+      return `"${s.replaceAll('"', '""')}"`
+    }
 
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+    const rows: string[] = []
+    // Force Excel delimiter to comma regardless of locale
+    rows.push("sep=,")
+    rows.push(headers.join(","))
+    for (const task of tasks) {
+      rows.push(
+        [
+          esc(task.title),
+          esc(task.description),
+          esc(task.priority),
+          esc(task.category),
+          esc(task.estimatedTime),
+          esc(task.dependencies?.join("; ") || ""),
+          esc(isTaskCompleted(task) ? "Completed" : "Pending"),
+        ].join(",")
+      )
+    }
+    // Use CRLF for better Excel compatibility
+    const csvContent = rows.join("\r\n")
+
+    // Prepend UTF-8 BOM for Excel encoding compatibility
+    const blob = new Blob(["\ufeff", csvContent], {
+      type: "text/csv;charset=utf-8;",
+    })
     const link = document.createElement("a")
     const url = URL.createObjectURL(blob)
     link.setAttribute("href", url)
@@ -209,10 +246,17 @@ export function ExportButtons({
     setShowCalendarTasks(true)
   }
 
-  const availableTasks = tasks.filter(
-    (task) => !completedTasks.has(getTaskId(task, projectTitle))
-  )
-  const exportedCount = tasks.length - availableTasks.length
+  // Available for calendar: exclude already completed tasks (from DB/State),
+  // and those already marked as done for calendar export
+  const availableTasks = tasks.filter((task) => {
+    const calendarDone = completedTasks.has(getTaskId(task, projectTitle))
+    return !isTaskCompleted(task) && !calendarDone
+  })
+
+  // Count only tasks that have been marked as done via calendar flow for this project
+  const exportedCount = tasks.reduce((acc, task) => {
+    return acc + (completedTasks.has(getTaskId(task, projectTitle)) ? 1 : 0)
+  }, 0)
   const handleSave = async () => {
     if (!project) return
     try {

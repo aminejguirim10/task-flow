@@ -158,6 +158,7 @@ export default function ChatTasks({ userId }: { userId: string }) {
                   project={project as Project}
                   showSaveDB={true}
                   userId={userId}
+                  completedTaskIds={completedTasks}
                 />
               </CardContent>
             </Card>

@@ -95,6 +95,13 @@ export default function ProjectTasks({
             }))}
             projectTitle={title}
             showSaveDB={false}
+            completedTaskIds={
+              new Set(
+                Object.entries(local)
+                  .filter(([_, v]) => v)
+                  .map(([k]) => k)
+              )
+            }
           />
         </CardContent>
       </Card>
