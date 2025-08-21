@@ -97,20 +97,13 @@ export default function ProjectsList({
               </p>
 
               <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                {query ? (
+                {query && (
                   <Button
                     variant="default"
                     className="px-6"
                     onClick={() => setQuery("")}
                   >
                     Clear search
-                  </Button>
-                ) : (
-                  <Button asChild className="group/button px-6">
-                    <Link href="/">
-                      Back to home
-                      <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-200 group-hover/button:translate-x-0.5" />
-                    </Link>
                   </Button>
                 )}
                 <Button asChild variant="outline" className="px-6">
