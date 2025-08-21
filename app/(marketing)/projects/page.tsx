@@ -1,7 +1,13 @@
 import ProjectsList from "@/components/app/projects-list"
 import { prisma } from "@/lib/db"
 import { ServerSession } from "@/lib/session"
+import { Metadata } from "next"
 import { redirect } from "next/navigation"
+
+export const metadata: Metadata = {
+  title: "Projects",
+  description: "Manage your projects and tasks effectively.",
+}
 
 export default async function ProjectsPage() {
   const session = await ServerSession()

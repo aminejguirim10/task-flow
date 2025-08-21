@@ -3,6 +3,26 @@ import { prisma } from "@/lib/db"
 import { ServerSession } from "@/lib/session"
 import { notFound, redirect } from "next/navigation"
 
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) => {
+  const { id } = await params
+
+  const project = await prisma.project.findUnique({
+    where: { id },
+    select: { title: true, description: true },
+  })
+
+  if (!project) return notFound()
+
+  return {
+    title: project.title,
+    description: project.description,
+  }
+}
+
 export default async function ProjectPage({
   params,
 }: {

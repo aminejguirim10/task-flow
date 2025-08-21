@@ -33,13 +33,15 @@ export default async function RegisterPage() {
       <div className="lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
-            <Image
-              src={"/assets/logo.png"}
-              alt="Logo"
-              width={1400}
-              height={1400}
-              className="mx-auto h-8 w-8 rounded-md"
-            />
+            <Link href={"/"} className="w-fit self-center">
+              <Image
+                src={"/assets/logo.png"}
+                alt="Logo"
+                width={105}
+                height={98}
+                className="mx-auto h-8 w-8 rounded-md"
+              />
+            </Link>
             <h1 className="text-2xl font-semibold tracking-tight">
               Create an account
             </h1>
