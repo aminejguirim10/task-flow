@@ -44,6 +44,7 @@ export default function ProjectsList({
   const [query, setQuery] = useState("")
   const [isPending, startTransition] = useTransition()
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState<string | null>(null)
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -127,7 +128,7 @@ export default function ProjectsList({
                 key={p.id}
                 className="group cursor-pointer transition-shadow hover:shadow-md"
                 onClick={() => {
-                  if (!isPending) {
+                  if (!isPending && !isDialogOpen) {
                     router.push(`/projects/${p.id}`)
                   }
                 }}
@@ -140,7 +141,16 @@ export default function ProjectsList({
                     {p.description}
                   </CardDescription>
                   <CardAction>
-                    <AlertDialog>
+                    <AlertDialog
+                      open={isDialogOpen === p.id}
+                      onOpenChange={(open) => {
+                        if (open) {
+                          setIsDialogOpen(p.id)
+                        } else {
+                          setIsDialogOpen(null)
+                        }
+                      }}
+                    >
                       <AlertDialogTrigger asChild>
                         <Button
                           size="icon"
@@ -166,14 +176,16 @@ export default function ProjectsList({
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={() => {
+                              setIsDialogOpen(null)
+                            }}
                           >
                             Cancel
                           </AlertDialogCancel>
                           <AlertDialogAction
-                            onClick={(e) => {
-                              e.stopPropagation()
+                            onClick={() => {
                               onDelete(p.id)
+                              setIsDialogOpen(null)
                             }}
                             disabled={deletingId === p.id || isPending}
                             className="bg-destructive hover:bg-destructive/90"
@@ -211,7 +223,10 @@ export default function ProjectsList({
                     </div>
                     <Button
                       variant="default"
-                      onClick={() => router.push(`/projects/${p.id}`)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        router.push(`/projects/${p.id}`)
+                      }}
                       className="group/button hover:cursor-pointer"
                       disabled={isPending}
                     >
