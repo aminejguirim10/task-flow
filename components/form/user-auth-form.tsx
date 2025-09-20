@@ -13,6 +13,7 @@ import { toast } from "sonner"
 import { LoaderCircle } from "lucide-react"
 import { GithubIcon, GoogleIcon } from "@/components/shared/icons"
 import { authClient } from "@/lib/auth-client"
+import { Badge } from "@/components/ui/badge"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   typeForm: "SIGNIN" | "SIGNUP"
@@ -33,6 +34,7 @@ export function UserAuthForm({
   } = useForm<FormData>({
     resolver: zodResolver(authSchema),
   })
+  const lastMethod = authClient.getLastUsedLoginMethod()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false)
   const [isGooogleLoading, setIsGoogleLoading] = React.useState<boolean>(false)
@@ -107,7 +109,7 @@ export function UserAuthForm({
           type="button"
           className={cn(
             buttonVariants({ variant: "outline" }),
-            "hover:cursor-pointer"
+            "relative hover:cursor-pointer"
           )}
           onClick={async () => {
             setIsGoogleLoading(true)
@@ -124,12 +126,17 @@ export function UserAuthForm({
             <GoogleIcon className="mr-2 h-4 w-4" />
           )}{" "}
           Google
+          {typeForm === "SIGNIN" && lastMethod === "google" && (
+            <Badge className="absolute -top-3 -right-3 opacity-90">
+              Last used
+            </Badge>
+          )}
         </button>
         <button
           type="button"
           className={cn(
             buttonVariants({ variant: "outline" }),
-            "hover:cursor-pointer"
+            "relative hover:cursor-pointer"
           )}
           onClick={async () => {
             setIsGitHubLoading(true)
@@ -146,6 +153,11 @@ export function UserAuthForm({
             <GithubIcon className="mr-2 h-4 w-4" />
           )}{" "}
           Github
+          {typeForm === "SIGNIN" && lastMethod === "github" && (
+            <Badge className="absolute -top-3 -right-3 opacity-90">
+              Last used
+            </Badge>
+          )}
         </button>
       </div>
     </div>

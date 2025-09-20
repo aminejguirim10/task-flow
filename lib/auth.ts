@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth"
 import { prismaAdapter } from "better-auth/adapters/prisma"
 import { prisma } from "./db"
-import { magicLink } from "better-auth/plugins"
+import { magicLink, lastLoginMethod } from "better-auth/plugins"
 import { sendMagicLink } from "@/actions/magic-link.actions"
 
 export const auth = betterAuth({
@@ -25,5 +25,6 @@ export const auth = betterAuth({
         await sendMagicLink(email, token, url)
       },
     }),
+    lastLoginMethod(),
   ],
 })
