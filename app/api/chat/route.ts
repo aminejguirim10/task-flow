@@ -34,7 +34,7 @@ export async function POST(req: Request) {
   }
 
   const result = streamObject({
-    model: groq("meta-llama/llama-4-maverick-17b-128e-instruct"),
+    model: groq("meta-llama/llama-4-scout-17b-16e-instruct"),
     schema: projectSchema,
     prompt: `You are a professional project manager and productivity expert. Generate a comprehensive task breakdown for the following project or goal: "${prompt}"
 
